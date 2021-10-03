@@ -8,6 +8,11 @@
     "deploy": "sls deploy"
   },
   "devDependencies": {
-    "serverless-offline-python": "^3.22.2"
+    "serverless-dotenv-plugin": "^3.10.0",
+    "serverless-offline": "^8.2.0",
+    "serverless-python-requirements": "^5.1.1"
+  },
+  "dependencies": {
+    "@hapi/hapi": "^20.2.0"
   }
 }

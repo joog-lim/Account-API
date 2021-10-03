@@ -5,7 +5,7 @@ provider:
   name: aws
   runtime: python3.8
   lambdaHashingVersion: 20201221
-  stage: dev
+  stage: apiV2
   region: ap-northeast-2
 
 resources:
@@ -30,8 +30,26 @@ resources:
           Ref: "ApiGatewayRestApi"
 
 functions:
-  login:
+  hello:
     handler: handler.hello
+    events:
+      - http:
+          path: hello
+          method: get
+          cors: true
+  # login:
+  #   handler: handler.login
+  #   events:
+  #     - http:
+  #         path: account/login
+  #         method: post
+  #         cors: true
 
 plugins:
-  - serverless-offline-python
+  - serverless-offline
+  - serverless-dotenv-plugin
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: non-linux
