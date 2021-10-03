@@ -1,0 +1,13 @@
+{
+  "name": "account-api",
+  "repository": "https://github.com/joog-lim/Account-API.git",
+  "author": "sunrabbit123 <qudwls185@naver.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "sls offline start",
+    "deploy": "sls deploy"
+  },
+  "devDependencies": {
+    "serverless-offline-python": "^3.22.2"
+  }
+}
