@@ -19,4 +19,4 @@ def login(event, __):
             header={"Content-Type": "application/json"}, message="값이 뭔가 이상합니다."
         )
 
-    return createRes(header={}, body={"message" : "무야호"})
+    return createRes(header={}, body={"message": "무야호"})
