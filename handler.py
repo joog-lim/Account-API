@@ -18,5 +18,5 @@ def login(event, __):
         return createErrorRes(
             header={"Content-Type": "application/json"}, message="값이 뭔가 이상합니다."
         )
-
-    return createRes(header={}, body={"message": "무야호"})
+    token : str = get_access_token_by_user()
+    return createRes(header={}, body={"token": token})
