@@ -3,11 +3,20 @@ import pymongo
 
 
 class UserRegistObject:
-    sub : str
+    sub: str
     email: str
     name: str
     generation: int
     is_student: bool
+
+    def __init__(
+        self, sub: str, email: str, name: str, generation: int, is_student: bool
+    ) -> None:
+        self.sub = sub
+        self.email = email
+        self.name = name
+        self.generation = generation
+        self.is_student = is_student
 
 
 class UserModel:
@@ -22,7 +31,7 @@ class UserModel:
 
     async def register(self, args: UserRegistObject) -> bool:
         insert_value: dict[str, Any] = {
-            "sub" : args.sub,
+            "sub": args.sub,
             "email": args.email,
             "name": args.name,
             "generation": args.generation,
@@ -39,6 +48,15 @@ class UserModel:
         return list(
             self.collect.find(
                 {"email": email},
-                { "_id" : False, "email": True, "name": True, "generation": True, "is_student": True},
+                {
+                    "_id": False,
+                    "email": True,
+                    "name": True,
+                    "generation": True,
+                    "is_student": True,
+                },
             )
         )
+
+    async def has_account(self, sub: str) -> bool:
+        return not not (self.collect.find({"sub": sub}, {"_id": True}))
