@@ -16,7 +16,7 @@ class TokenModel:
         self.collect : pymongo.collection.Collection
         this collection name is `user`
         """
-        self.collect: pymongo.collection.Collection = db["user"]
+        self.collect: pymongo.collection.Collection = db["session"]
 
     async def add(self, sub : str) -> bool:
         insert_value: dict[str, Any] = {
