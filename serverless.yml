@@ -37,13 +37,21 @@ functions:
           path: hello
           method: get
           cors: true
-  # login:
-  #   handler: handler.login
-  #   events:
-  #     - http:
-  #         path: account/login
-  #         method: post
-  #         cors: true
+  login:
+    handler: handler.login_or_regist
+    events:
+      - http:
+          path: account/login
+          method: post
+          cors: true
+
+  logout:
+    handler: handler.logout
+    events:
+      - http:
+          path: account/logout
+          method: post
+          cors: true
 
 plugins:
   - serverless-offline
