@@ -1,33 +1,34 @@
 from typing import Any
-from account.model.token import TokenModel
-from account.model.user import UserModel, UserRegistObject
-from account.util.student import get_generation_from_email, get_is_student_from_email
+
+from middleware.mongo import DB_CONNECT
+from model.token import TokenModel
+from model.user import UserModel, UserRegistObject
+from util.student import get_generation_from_email, get_is_student_from_email
+
 from util.auth import auth_by_google_token
 from util.serverless import createRes, createErrorRes
 from util.db import get_mongo_db
-
 
 def hello(_, __):
     body = {
         "message": "Go Serverless v1.0! Your function executed successfully!",
         "input": _,
     }
-
     return createRes(header={"Content-Type": "application/json"}, body=body)
 
+@DB_CONNECT()
+def logout(event, _, DB):
+    db = DB
 
-def logout(event, _):
-    db = get_mongo_db()
+    token: str = event.headers.Authorization
 
-    token : str = event.headers.Authorization
-
-    if (TokenModel(db).delete(token)):
+    if TokenModel(db).delete(token):
         return createRes(header={}, body={})
     else:
-        return createErrorRes(header={}, body={"message" : "권한이 없습니다."}, statusCode=401)
-        
+        return createErrorRes(header={}, body={"message": "권한이 없습니다."}, statusCode=401)
 
-def login_or_regist(event, _):
+@DB_CONNECT()
+def login_or_regist(event, _, DB):
     decode_token: dict[str, Any] = auth_by_google_token(event.headers.Authorization)
     sub: str = decode_token.get("sub")
 
@@ -36,7 +37,7 @@ def login_or_regist(event, _):
             header={"Content-Type": "application/json"}, message="값이 뭔가 이상합니다."
         )
 
-    db = get_mongo_db()
+    db = DB
     userCollect = UserModel(db)
     tokenCollect = TokenModel(db)
 
