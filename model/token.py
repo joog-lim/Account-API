@@ -14,7 +14,7 @@ class TokenModel:
         db : pymongo.database.Database
 
         self.collect : pymongo.collection.Collection
-        this collection name is `user`
+        this collection name is `session`
         """
         self.collect: pymongo.collection.Collection = db["session"]
 
