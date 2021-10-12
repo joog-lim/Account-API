@@ -44,19 +44,26 @@ class UserModel:
         self.collect.remove({"email": email})
         return True
 
-    async def get_user_info(self, email: str):
-        return list(
-            self.collect.find(
-                {"email": email},
-                {
-                    "_id": False,
-                    "email": True,
-                    "name": True,
-                    "generation": True,
-                    "is_student": True,
-                },
+    async def get_user_info(self, arg: str):
+        """
+        arg를 토대로 유저 정보를 받아옵니다.
+        
+        arg_list : list[str] = ["sub", "email"]
+        """
+        arg_list : list[str] = ["sub", "email"]
+        if arg in arg_list:
+            return list(
+                self.collect.find(
+                    {arg: arg},
+                    {
+                        "_id": False,
+                        "email": True,
+                        "name": True,
+                        "generation": True,
+                        "is_student": True,
+                    },
+                )
             )
-        )
 
     async def has_account(self, sub: str) -> bool:
         return not not (self.collect.find({"sub": sub}, {"_id": True}))
