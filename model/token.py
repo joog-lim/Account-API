@@ -5,7 +5,6 @@ import pymongo
 
 from pytz import timezone
 from cryptography.fernet import Fernet
-from typing import Any
 
 
 class TokenModel:
@@ -17,6 +16,7 @@ class TokenModel:
         this collection name is `session`
         """
         self.collect: pymongo.collection.Collection = db["session"]
+        self.now = datetime.now(timezone("Asia/Seoul"))
 
     fernet: Fernet = Fernet(os.environ["CRYPTO_KEY"])
 
@@ -40,8 +40,8 @@ class TokenModel:
         token_str: str = token_byte.decode("ascii")
         return token_str
 
-    async def add(self, sub: str) -> bool:
-        insert_value: dict[str, Any] = {
+    def add(self, sub: str) -> str:
+        insert_value: dict = {
             "sub": sub,
             "created_at": datetime.now(timezone("Asia/Seoul")),
             "renew_able_at": datetime.now(timezone("Asia/Seoul")) + timedelta(days=20),
@@ -51,16 +51,16 @@ class TokenModel:
         token_str: str = TokenModel.encode_token(
             sub, str(insert_value["created_at"].timestamp())
         )
+        insert_value.update(token_str=token_str)
+        self.collect.insert(insert_value)
 
-        self.collect.insert(dict(insert_value, {"token": token_str}))
+        return token_str
 
-        return True
-
-    async def delete(self, token: str) -> bool:
+    def delete(self, token: str) -> bool:
         self.collect.remove({"token": token})
         return True
 
-    async def find(self, token: str):
+    def find(self, token: str):
         return list(
             self.collect.find(
                 {"token": token},

@@ -1,4 +1,3 @@
-from typing import Any
 import pymongo
 
 
@@ -30,7 +29,7 @@ class UserModel:
         self.collect: pymongo.collection.Collection = db["user"]
 
     async def register(self, args: UserRegistObject) -> bool:
-        insert_value: dict[str, Any] = {
+        insert_value: dict = {
             "sub": args.sub,
             "email": args.email,
             "name": args.name,
@@ -47,10 +46,10 @@ class UserModel:
     async def get_user_info(self, arg: str):
         """
         arg를 토대로 유저 정보를 받아옵니다.
-        
+
         arg_list : list[str] = ["sub", "email"]
         """
-        arg_list : list[str] = ["sub", "email"]
+        arg_list: list[str] = ["sub", "email"]
         if arg in arg_list:
             return list(
                 self.collect.find(

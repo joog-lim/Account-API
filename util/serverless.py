@@ -1,7 +1,6 @@
 import json
-from typing import Any
 
-ALLOWED_ORIGINS: list[str] = [
+ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://localhost:3000",
     "http://localhost",
@@ -11,15 +10,25 @@ ALLOWED_ORIGINS: list[str] = [
     "https://jooglim.netlify.app",
 ]
 
-CORS_HEADER: dict[str, Any] = {
+CORS_HEADER = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Credentials": True,
 }
 
 
-def createRes(header: dict[str, Any], body: dict[str, Any], statusCode: int = 200):
-    return {"statusCode": statusCode, "headers": header, "body": json.dumps(body)}
+def createRes(header, body, statusCode: int = 200):
+    header.update(CORS_HEADER)
+    return {
+        "statusCode": statusCode,
+        "headers": header,
+        "body": json.dumps(body),
+    }
 
 
-def createErrorRes(header: dict[str, Any], body: dict[str, Any], statusCode: int = 401):
-    return {"statusCode": statusCode, "headers": header, "body": json.dumps(body)}
+def createErrorRes(header, body, statusCode: int = 401):
+    header.update(CORS_HEADER)
+    return {
+        "statusCode": statusCode,
+        "headers": header,
+        "body": json.dumps(body),
+    }

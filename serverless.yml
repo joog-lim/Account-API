@@ -5,7 +5,7 @@ provider:
   name: aws
   runtime: python3.8
   lambdaHashingVersion: 20201221
-  stage: apiV2
+  stage: test
   region: ap-northeast-2
 
 resources:
@@ -53,11 +53,24 @@ functions:
           method: post
           cors: true
 
+  add_emoji:
+    handler: handler.add_emoji
+    events:
+      - http:
+          path: emoji
+          method: post
+          cors: true
+  remove_emoji:
+    handler: handler.remove_emoji
+    events:
+      - http:
+          path: emoji
+          method: delete
+          cors: true
 plugins:
   - serverless-offline
   - serverless-dotenv-plugin
   - serverless-python-requirements
-
 custom:
   pythonRequirements:
-    dockerizePip: non-linux
+    dockerizePip: true
