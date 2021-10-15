@@ -57,14 +57,14 @@ functions:
     handler: handler.add_emoji
     events:
       - http:
-          path: emoji
+          path: emoji/{emoji}
           method: post
           cors: true
   remove_emoji:
     handler: handler.remove_emoji
     events:
       - http:
-          path: emoji
+          path: emoji/{emoji}
           method: delete
           cors: true
 plugins:
