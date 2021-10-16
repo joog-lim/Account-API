@@ -13,22 +13,37 @@ class EmojiModel:
         """
         self.collect: pymongo.collection.Collection = db["emoji"]
 
-    async def add(self, sub: str, reaction: str = "thumbsup"):
+    def add(self, sub: str, algorithem_num: int, reaction: str = "thumbsup"):
         """
         add emoji 👍 or 👎 from sub
         """
         if reaction not in EmojiModel.reaction_list:
             return False
 
-        self.collect.insert({"sub": sub, "reaction": reaction})
+        self.collect.insert(
+            {"number": algorithem_num, "sub": sub, "reaction": reaction}
+        )
         return True
 
-    async def remove(self, sub: str, reaction: str = "thumbsup"):
+    def remove(self, sub: str, algorithem_num : int, reaction: str = "thumbsup"):
         """
         remove emoji 👍 or 👎
         """
         if reaction not in EmojiModel.reaction_list:
             return False
 
-        self.collect.remove({"sub": sub, "reaction": reaction})
+        self.collect.remove({"number" : algorithem_num, "sub": sub, "reaction": reaction})
         return True
+
+    def join_emoji(self, number: int):
+        return self.collect.aggregate(
+            [
+                {"$match": {"number": number}},
+                {
+                    "$group": {
+                        "_id": "$reaction",
+                        "count": {"$sum": 1},
+                    }
+                },
+            ]
+        )

@@ -53,6 +53,14 @@ functions:
           method: post
           cors: true
 
+  join_emoji:
+    handler: handler.join_emoji
+    events:
+      - http:
+          path: emoji
+          method: get
+          cors: true
+
   add_emoji:
     handler: handler.add_emoji
     events:
@@ -60,6 +68,7 @@ functions:
           path: emoji/{emoji}
           method: post
           cors: true
+
   remove_emoji:
     handler: handler.remove_emoji
     events:
@@ -67,6 +76,7 @@ functions:
           path: emoji/{emoji}
           method: delete
           cors: true
+
 plugins:
   - serverless-offline
   - serverless-dotenv-plugin

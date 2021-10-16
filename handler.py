@@ -76,9 +76,11 @@ def login_or_regist(event, _, DB):
 @TOKEN_MANAGE()
 def add_emoji(event, _, DB, TOKEN, sub):
     emoji: str = event.pathParameters.emoji
+    algorithem_num: int = int(event.body.num)
+
     emoji_collect = EmojiModel(DB)
 
-    if emoji_collect.add(sub, reaction=emoji):
+    if emoji_collect.add(sub, algorithem_num=algorithem_num, reaction=emoji):
         return createRes(
             header={
                 "Set-Cookie": f"token={TOKEN}; Secure; HttpOnly; Domain=server.joog-lim.info; Path=/"
@@ -95,9 +97,11 @@ def add_emoji(event, _, DB, TOKEN, sub):
 @TOKEN_MANAGE()
 def remove_emoji(event, _, DB, TOKEN, sub):
     emoji: str = event.pathParameters.emoji
+    algorithem_num: int = int(event.body.num)
+
     emoji_collect = EmojiModel(DB)
 
-    if emoji_collect.remove(sub, reaction=emoji):
+    if emoji_collect.remove(sub, algorithem_num=algorithem_num, reaction=emoji):
         return createRes(
             header={
                 "Set-Cookie": f"token={TOKEN}; Secure; HttpOnly; Domain=server.joog-lim.info; Path=/"
@@ -108,3 +112,11 @@ def remove_emoji(event, _, DB, TOKEN, sub):
         return createErrorRes(
             header={}, body={"message": "Bad Request"}, statusCode=400
         )
+
+
+@DB_CONNECT()
+def join_emoji(event, _, DB):
+    algorithem_num : int = int(event.body.num)
+    emoji_collect = EmojiModel(DB)
+
+    return createRes(headers={}, body = emoji_collect.join_emoji(algorithem_num))
