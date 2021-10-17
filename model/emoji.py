@@ -17,7 +17,7 @@ class EmojiModel:
         """
         add emoji 👍 or 👎 from sub
         """
-        if reaction not in EmojiModel.reaction_list:
+        if self.collect.find({"number": algorithem_num, "sub": sub}):
             return False
 
         self.collect.insert(
@@ -25,14 +25,16 @@ class EmojiModel:
         )
         return True
 
-    def remove(self, sub: str, algorithem_num : int, reaction: str = "thumbsup"):
+    def remove(self, sub: str, algorithem_num: int, reaction: str = "thumbsup"):
         """
         remove emoji 👍 or 👎
         """
         if reaction not in EmojiModel.reaction_list:
             return False
 
-        self.collect.remove({"number" : algorithem_num, "sub": sub, "reaction": reaction})
+        self.collect.remove(
+            {"number": algorithem_num, "sub": sub, "reaction": reaction}
+        )
         return True
 
     def join_emoji(self, number: int):

@@ -80,6 +80,11 @@ def add_emoji(event, _, DB, TOKEN, sub):
 
     emoji_collect = EmojiModel(DB)
 
+    if emoji not in EmojiModel.reaction_list:
+        return createErrorRes(
+            header={}, body={"message": "Bad Request"}, statusCode=400
+        )
+
     if emoji_collect.add(sub, algorithem_num=algorithem_num, reaction=emoji):
         return createRes(
             header={
@@ -89,7 +94,7 @@ def add_emoji(event, _, DB, TOKEN, sub):
         )
     else:
         return createErrorRes(
-            header={}, body={"message": "Bad Request"}, statusCode=400
+            header={}, body={"message": "Already been processed"}, statusCode=418
         )
 
 
@@ -116,7 +121,7 @@ def remove_emoji(event, _, DB, TOKEN, sub):
 
 @DB_CONNECT()
 def join_emoji(event, _, DB):
-    algorithem_num : int = int(event.body.num)
+    algorithem_num: int = int(event.body.num)
     emoji_collect = EmojiModel(DB)
 
-    return createRes(headers={}, body = emoji_collect.join_emoji(algorithem_num))
+    return createRes(headers={}, body=emoji_collect.join_emoji(algorithem_num))
