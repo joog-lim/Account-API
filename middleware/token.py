@@ -7,7 +7,7 @@ from model.token import TokenModel
 def TOKEN_MANAGE():
     def decorator(func):
         def wrap(*args, **kwargs):
-            token: str = args[0].headers.Authorization
+            token: str = args[0]["headers"]["Authorization"]
 
             token_model = TokenModel(kwargs["DB"])
 

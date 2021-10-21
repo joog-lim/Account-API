@@ -45,7 +45,7 @@ def login_or_regist(event, _, DB):
     user_collect = UserModel(db)
     token_collect = TokenModel(db)
 
-    if user_collect.has_account():  # 계정 있는지 확인
+    if user_collect.has_account(sub):  # 계정 있는지 확인
         token: str = token_collect.add(sub)  # 있다면 바로 토큰 발급
     else:  # 없다면 회원가입 진행
         email: str = decode_token.get("email")

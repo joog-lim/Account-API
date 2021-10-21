@@ -28,7 +28,7 @@ class UserModel:
         """
         self.collect: pymongo.collection.Collection = db["user"]
 
-    async def register(self, args: UserRegistObject) -> bool:
+    def register(self, args: UserRegistObject) -> bool:
         insert_value: dict = {
             "sub": args.sub,
             "email": args.email,
@@ -39,11 +39,11 @@ class UserModel:
         self.collect.insert(insert_value)
         return True
 
-    async def delete_account(self, email: str) -> bool:
+    def delete_account(self, email: str) -> bool:
         self.collect.remove({"email": email})
         return True
 
-    async def get_user_info(self, arg: str):
+    def get_user_info(self, arg: str):
         """
         arg를 토대로 유저 정보를 받아옵니다.
 
@@ -64,5 +64,5 @@ class UserModel:
                 )
             )
 
-    async def has_account(self, sub: str) -> bool:
+    def has_account(self, sub: str) -> bool:
         return not not (self.collect.find({"sub": sub}, {"_id": True}))
