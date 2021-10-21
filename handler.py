@@ -34,12 +34,11 @@ def logout(event, _, DB):
 @DB_CONNECT()
 def login_or_regist(event, _, DB):
 
-    decode_token: dict = auth_by_google_token(event.headers.Authorization)
+    decode_token = auth_by_google_token(event["headers"]["Authorization"])
     sub: str = decode_token.get("sub")
-
     if sub is None:
         return createErrorRes(
-            header={"Content-Type": "application/json"}, message="값이 뭔가 이상합니다."
+            header={"Content-Type": "application/json"}, message=decode_token["error"]
         )
 
     db = DB
