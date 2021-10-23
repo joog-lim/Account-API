@@ -125,5 +125,4 @@ def remove_emoji(event, _, DB, TOKEN, sub):
 def join_emoji(event, _, DB):
     algorithem_num: int = int(event["queryStringParameters"]["num"])
     emoji = EmojiModel(DB).join_emoji(algorithem_num)
-    print(emoji)
-    return createRes(header={}, body={"emoji": emoji})
+    return createRes(header={}, body={i["_id"]: i["count"] for i in emoji})
