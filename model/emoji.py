@@ -38,14 +38,16 @@ class EmojiModel:
         return True
 
     def join_emoji(self, number: int):
-        return self.collect.aggregate(
-            [
-                {"$match": {"number": number}},
-                {
-                    "$group": {
-                        "_id": "$reaction",
-                        "count": {"$sum": 1},
-                    }
-                },
-            ]
+        return list(
+            self.collect.aggregate(
+                [
+                    {"$match": {"number": number}},
+                    {
+                        "$group": {
+                            "_id": "$reaction",
+                            "count": {"$sum": 1},
+                        }
+                    },
+                ]
+            )
         )

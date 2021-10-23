@@ -1,10 +1,12 @@
-from model.emoji import EmojiModel
+import json
 
 from middleware.token import TOKEN_MANAGE
 from middleware.mongo import DB_CONNECT
 
+from model.emoji import EmojiModel
 from model.token import TokenModel
 from model.user import UserModel, UserRegistObject
+
 from util.student import get_generation_from_email, get_is_student_from_email
 from util.auth import auth_by_google_token
 from util.serverless import createRes, createErrorRes
@@ -75,7 +77,8 @@ def login_or_regist(event, _, DB):
 @TOKEN_MANAGE()
 def add_emoji(event, _, DB, TOKEN, sub):
     emoji: str = event["pathParameters"]["emoji"]
-    algorithem_num: int = int(event["body"]["num"])
+    print(type(event["body"]))
+    algorithem_num: int = json.loads(event["body"])
 
     emoji_collect = EmojiModel(DB)
 
@@ -120,7 +123,7 @@ def remove_emoji(event, _, DB, TOKEN, sub):
 
 @DB_CONNECT()
 def join_emoji(event, _, DB):
-    algorithem_num: int = int(event["body"]["num"])
-    emoji_collect = EmojiModel(DB)
-
-    return createRes(headers={}, body=emoji_collect.join_emoji(algorithem_num))
+    algorithem_num: int = int(event["queryStringParameters"]["num"])
+    emoji = EmojiModel(DB).join_emoji(algorithem_num)
+    print(emoji)
+    return createRes(header={}, body={"emoji": emoji})

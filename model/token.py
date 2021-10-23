@@ -3,7 +3,7 @@ import os
 
 import pymongo
 
-from pytz import timezone
+from config import service_timezone
 from cryptography.fernet import Fernet
 
 
@@ -16,7 +16,7 @@ class TokenModel:
         this collection name is `session`
         """
         self.collect: pymongo.collection.Collection = db["session"]
-        self.now = datetime.now(timezone("Asia/Seoul"))
+        self.now = datetime.now(service_timezone)
 
     fernet: Fernet = Fernet(os.environ["CRYPTO_KEY"])
 
@@ -29,8 +29,8 @@ class TokenModel:
         """
         token_bytes: bytes = token.encode("ascii")
 
-        decode_token: str = TokenModel.fernet.decrypt(token_bytes)
-        return decode_token.split(os.environ["DISTINGUISHER"])[0]
+        decode_token: bytes = TokenModel.fernet.decrypt(token_bytes)
+        return decode_token.decode("ascii").split(os.environ["DISTINGUISHER"])[0]
 
     @staticmethod
     def encode_token(sub: str, created_at: str) -> str:
@@ -42,9 +42,9 @@ class TokenModel:
 
     def add(self, sub: str) -> str:
         insert_value: dict = {
-            "created_at": datetime.now(timezone("Asia/Seoul")),
-            "renew_able_at": datetime.now(timezone("Asia/Seoul")) + timedelta(days=20),
-            "expired_at": datetime.now(timezone("Asia/Seoul")) + timedelta(days=30),
+            "created_at": datetime.now(service_timezone),
+            "renew_able_at": datetime.now(service_timezone) + timedelta(days=20),
+            "expired_at": datetime.now(service_timezone) + timedelta(days=30),
         }
 
         token_str: str = TokenModel.encode_token(
@@ -56,11 +56,11 @@ class TokenModel:
         return token_str
 
     def delete(self, token: str) -> bool:
-        self.collect.remove({"token": token})
+        self.collect.remove({"token_str": token})
         return True
 
     def find(self, token: str):
         return self.collect.find_one(
-            {"token": token},
+            {"token_str": token},
             {"_id": False, "token": token, "renew_able_at": True, "expired_at": True},
         )
