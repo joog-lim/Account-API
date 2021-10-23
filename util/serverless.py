@@ -25,10 +25,10 @@ def createRes(header, body, statusCode: int = 200):
     }
 
 
-def createErrorRes(header, message, statusCode: int = 401):
+def createErrorRes(header, message: str, statusCode: int = 401):
     header.update(CORS_HEADER)
     return {
         "statusCode": statusCode,
         "headers": header,
-        "body": json.dumps({"message" : message}),
+        "body": json.dumps({"message": message}),
     }

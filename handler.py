@@ -23,7 +23,7 @@ def hello(event, __):
 def logout(event, _, DB):
     db = DB
 
-    token: str = event.headers.Authorization
+    token: str = event["headers"]["Authorization"]
 
     if TokenModel(db).delete(token):
         return createRes(header={}, body={})
@@ -44,7 +44,7 @@ def login_or_regist(event, _, DB):
     db = DB
     user_collect = UserModel(db)
     token_collect = TokenModel(db)
-
+    print(user_collect.has_account(sub))
     if user_collect.has_account(sub):  # 계정 있는지 확인
         token: str = token_collect.add(sub)  # 있다면 바로 토큰 발급
     else:  # 없다면 회원가입 진행
@@ -74,8 +74,8 @@ def login_or_regist(event, _, DB):
 @DB_CONNECT()
 @TOKEN_MANAGE()
 def add_emoji(event, _, DB, TOKEN, sub):
-    emoji: str = event.pathParameters.emoji
-    algorithem_num: int = int(event.body.num)
+    emoji: str = event["pathParameters"]["emoji"]
+    algorithem_num: int = int(event["body"]["num"])
 
     emoji_collect = EmojiModel(DB)
 
@@ -100,8 +100,8 @@ def add_emoji(event, _, DB, TOKEN, sub):
 @DB_CONNECT()
 @TOKEN_MANAGE()
 def remove_emoji(event, _, DB, TOKEN, sub):
-    emoji: str = event.pathParameters.emoji
-    algorithem_num: int = int(event.body.num)
+    emoji: str = event["pathParameters"]["emoji"]
+    algorithem_num: int = int(event["body"]["num"])
 
     emoji_collect = EmojiModel(DB)
 
@@ -120,7 +120,7 @@ def remove_emoji(event, _, DB, TOKEN, sub):
 
 @DB_CONNECT()
 def join_emoji(event, _, DB):
-    algorithem_num: int = int(event.body.num)
+    algorithem_num: int = int(event["body"]["num"])
     emoji_collect = EmojiModel(DB)
 
     return createRes(headers={}, body=emoji_collect.join_emoji(algorithem_num))

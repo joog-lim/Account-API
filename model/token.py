@@ -30,7 +30,7 @@ class TokenModel:
         token_bytes: bytes = token.encode("ascii")
 
         decode_token: str = TokenModel.fernet.decrypt(token_bytes)
-        return decode_token
+        return decode_token.split(os.environ["DISTINGUISHER"])[0]
 
     @staticmethod
     def encode_token(sub: str, created_at: str) -> str:
@@ -42,7 +42,6 @@ class TokenModel:
 
     def add(self, sub: str) -> str:
         insert_value: dict = {
-            "sub": sub,
             "created_at": datetime.now(timezone("Asia/Seoul")),
             "renew_able_at": datetime.now(timezone("Asia/Seoul")) + timedelta(days=20),
             "expired_at": datetime.now(timezone("Asia/Seoul")) + timedelta(days=30),
@@ -61,9 +60,7 @@ class TokenModel:
         return True
 
     def find(self, token: str):
-        return list(
-            self.collect.find(
-                {"token": token},
-                {"_id": False, "sub": True, "renew_able_at": True, "expired_at": True},
-            )
+        return self.collect.find_one(
+            {"token": token},
+            {"_id": False, "token": token, "renew_able_at": True, "expired_at": True},
         )

@@ -13,7 +13,7 @@ CLIENT_ID_IOS: str = os.environ["CLIENT_ID_IOS"]
 def auth_by_google_token(token: str):
     try:
         info = id_token.verify_oauth2_token(token, requests.Request())
-        
+
         if info["aud"] not in [CLIENT_ID_WEB, CLIENT_ID_ANDROID, CLIENT_ID_IOS]:
             return {"error": "Invaild Client Id"}
     except ValueError:

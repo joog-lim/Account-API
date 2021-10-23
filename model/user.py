@@ -65,4 +65,4 @@ class UserModel:
             )
 
     def has_account(self, sub: str) -> bool:
-        return not not (self.collect.find({"sub": sub}, {"_id": True}))
+        return not not (self.collect.find_one({"sub": sub}, {"_id": True}))
