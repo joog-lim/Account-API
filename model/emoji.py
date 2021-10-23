@@ -17,7 +17,7 @@ class EmojiModel:
         """
         add emoji 👍 or 👎 from sub
         """
-        if self.collect.find({"number": algorithem_num, "sub": sub}):
+        if self.collect.find_one({"number": algorithem_num, "sub": sub}):
             return False
 
         self.collect.insert(

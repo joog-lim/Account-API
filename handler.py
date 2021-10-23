@@ -77,15 +77,12 @@ def login_or_regist(event, _, DB):
 @TOKEN_MANAGE()
 def add_emoji(event, _, DB, TOKEN, sub):
     emoji: str = event["pathParameters"]["emoji"]
-    print(type(event["body"]))
-    algorithem_num: int = json.loads(event["body"])
+    algorithem_num: int = json.loads(event["body"])["num"]
 
     emoji_collect = EmojiModel(DB)
 
     if emoji not in EmojiModel.reaction_list:
-        return createErrorRes(
-            header={}, body={"message": "Bad Request"}, statusCode=400
-        )
+        return createErrorRes(header={}, message="Bad Request", statusCode=400)
 
     if emoji_collect.add(sub, algorithem_num=algorithem_num, reaction=emoji):
         return createRes(
@@ -96,7 +93,7 @@ def add_emoji(event, _, DB, TOKEN, sub):
         )
     else:
         return createErrorRes(
-            header={}, body={"message": "Already been processed"}, statusCode=418
+            header={}, message="Already been processed", statusCode=418
         )
 
 
@@ -104,9 +101,12 @@ def add_emoji(event, _, DB, TOKEN, sub):
 @TOKEN_MANAGE()
 def remove_emoji(event, _, DB, TOKEN, sub):
     emoji: str = event["pathParameters"]["emoji"]
-    algorithem_num: int = int(event["body"]["num"])
+    algorithem_num: int = json.loads(event["body"])
 
     emoji_collect = EmojiModel(DB)
+
+    if emoji not in EmojiModel.reaction_list:
+        return createErrorRes(header={}, message="Bad Request", statusCode=400)
 
     if emoji_collect.remove(sub, algorithem_num=algorithem_num, reaction=emoji):
         return createRes(
@@ -117,7 +117,7 @@ def remove_emoji(event, _, DB, TOKEN, sub):
         )
     else:
         return createErrorRes(
-            header={}, body={"message": "Bad Request"}, statusCode=400
+            header={}, message="Already been processed", statusCode=418
         )
 
 
