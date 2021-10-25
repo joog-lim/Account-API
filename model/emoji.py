@@ -2,7 +2,7 @@ import pymongo
 
 
 class EmojiModel:
-    reaction_list = ["thumbsup", "thumbsdown"]
+    reaction_list = ["leaf"]
 
     def __init__(self, db: pymongo.database.Database):
         """
@@ -13,9 +13,9 @@ class EmojiModel:
         """
         self.collect: pymongo.collection.Collection = db["emoji"]
 
-    def add(self, sub: str, algorithem_num: int, reaction: str = "thumbsup"):
+    def add(self, sub: str, algorithem_num: int, reaction: str = "leaf"):
         """
-        add emoji 👍 or 👎 from sub
+        add emoji(leaf)
         """
         if self.collect.find_one(
             {"number": algorithem_num, "sub": sub, "reaction": reaction}
@@ -27,9 +27,9 @@ class EmojiModel:
         )
         return True
 
-    def remove(self, sub: str, algorithem_num: int, reaction: str = "thumbsup"):
+    def remove(self, sub: str, algorithem_num: int, reaction: str = "leaf"):
         """
-        remove emoji 👍 or 👎
+        remove emoji(leaf)
         """
         if reaction not in EmojiModel.reaction_list:
             return False
