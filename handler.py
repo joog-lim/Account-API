@@ -27,7 +27,7 @@ def logout(event, _, DB):
 
     token: str = event["headers"]["Authorization"]
 
-    if TokenModel(db).delete(token):
+    if TokenModel(db).delete_by_token(token):
         return createRes(header={}, body={})
     else:
         return createErrorRes(header={}, body={"message": "권한이 없습니다."}, statusCode=401)
@@ -46,7 +46,7 @@ def login_or_regist(event, _, DB):
     db = DB
     user_collect = UserModel(db)
     token_collect = TokenModel(db)
-    print(user_collect.has_account(sub))
+
     if user_collect.has_account(sub):  # 계정 있는지 확인
         token: str = token_collect.add(sub)  # 있다면 바로 토큰 발급
     else:  # 없다면 회원가입 진행

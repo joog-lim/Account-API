@@ -55,10 +55,10 @@ class TokenModel:
 
         return token_str
 
-    def delete(self, token: str) -> bool:
+    def delete_by_token(self, token: str) -> bool:
         self.collect.remove({"token_str": token})
         return True
-
+    
     def find(self, token: str):
         return self.collect.find_one(
             {"token_str": token},
