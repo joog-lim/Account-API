@@ -31,10 +31,12 @@ class EmojiModel:
         """
         remove emoji(leaf)
         """
-        if reaction not in EmojiModel.reaction_list:
+        if not self.collect.find_one(
+            {"number": algorithem_num, "sub": sub, "reaction": reaction}
+        ):
             return False
 
-        self.collect.remove(
+        self.collect.delete_one(
             {"number": algorithem_num, "sub": sub, "reaction": reaction}
         )
         return True

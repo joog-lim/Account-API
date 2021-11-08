@@ -70,7 +70,12 @@ def login_or_regist(event, _, DB):
         user_collect.register(regist_value)
         token: str = token_collect.add(sub)
 
-    return createRes(header={}, body={"token": token})
+    return createRes(
+        header={
+            "Set-Cookie": f"token={token}; Secure; HttpOnly; Domain=server.joog-lim.info; Path=/;"
+        },
+        body={"token": token},
+    )
 
 
 @DB_CONNECT()
@@ -87,7 +92,7 @@ def add_emoji(event, _, DB, TOKEN, sub):
     if emoji_collect.add(sub, algorithem_num=algorithem_num, reaction=emoji):
         return createRes(
             header={
-                "Set-Cookie": f"token={TOKEN}; Secure; HttpOnly; Domain=server.joog-lim.info; Path=/"
+                "Set-Cookie": f"token={TOKEN}; Secure; HttpOnly; Domain=joog-lim.info; Path=/;"
             },
             body={"message": "success"},
         )
@@ -101,7 +106,7 @@ def add_emoji(event, _, DB, TOKEN, sub):
 @TOKEN_MANAGE()
 def remove_emoji(event, _, DB, TOKEN, sub):
     emoji: str = event["pathParameters"]["emoji"]
-    algorithem_num: int = json.loads(event["body"])
+    algorithem_num: int = json.loads(event["body"])["num"]
 
     emoji_collect = EmojiModel(DB)
 
@@ -111,7 +116,7 @@ def remove_emoji(event, _, DB, TOKEN, sub):
     if emoji_collect.remove(sub, algorithem_num=algorithem_num, reaction=emoji):
         return createRes(
             header={
-                "Set-Cookie": f"token={TOKEN}; Secure; HttpOnly; Domain=server.joog-lim.info; Path=/"
+                "Set-Cookie": f"token={TOKEN}; Secure; HttpOnly; Domain=joog-lim.info; Path=/;"
             },
             body={"message": "success"},
         )
